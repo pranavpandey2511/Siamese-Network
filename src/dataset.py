@@ -19,40 +19,30 @@ class SiameseVanillaDataset():
         self.imageFolderDataset = imageFolderDataset    
 
         if transform:
-            self.aug = albumentations.Compose([
-                albumentations.Resize(img_height, img_width, always_apply=True),
-                albumentations.ShiftScaleRotate(shift_limit=0.0625,
-                                scale_limit=0.1,
-                                rotate_limit=5,
-                                p=0.9),
-                albumentations.Normalize(mean, std, always_apply= True),
-                ToTensor()
-            ])
-        else:
-            self.aug = albumentations.Compose([
-                albumentations.Resize(img_height, img_width, always_apply=True),
-                albumentations.Normalize(mean, std, always_apply= True),
-                ToTensor()
-            ])
             self.aug_2 = transforms.Compose([transforms.Resize((520,200)),
                                             transforms.ToTensor(),
-                                            transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                            # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+                                            ])
+        else:
+            self.aug_2 = transforms.Compose([transforms.Resize((520,200)),
+                                            transforms.ToTensor(),
+                                            # transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
                                             ])
     
     def __getitem__(self,index):
-        img0_tuple = random.choice(self.imageFolderDataset.imgs)
+        # img0_tuple = random.choice(self.imageFolderDataset.imgs)
+        img0_tuple = self.imageFolderDataset.imgs[index]
         #we need to make sure approx 50% of images are in the same class
         should_get_same_class = random.randint(0,1) 
         if should_get_same_class:
             while True:
                 #keep looping till the same class image is found
                 img1_tuple = random.choice(self.imageFolderDataset.imgs) 
-                if img0_tuple[1]==img1_tuple[1]:
+                if img0_tuple[1]==img1_tuple[1] and img0_tuple[0] != img1_tuple[0]:
                     break
         else:
             while True:
                 #keep looping till a different class image is found
-                
                 img1_tuple = random.choice(self.imageFolderDataset.imgs) 
                 if img0_tuple[1] !=img1_tuple[1]:
                     break

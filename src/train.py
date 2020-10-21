@@ -48,6 +48,11 @@ def train(optimizer, data_loader, train_batch_size, model, options):
         val_loss += loss
     return (val_loss/counter)
 
+""" 
+
+THIS FUNCTION CANNOT BE IMPLEMENTED RIGHT NOW
+
+
 def evaluate(optimizer, data_loader, test_batch_size, model, options):
     model.eval()
     val_loss = 0
@@ -63,7 +68,7 @@ def evaluate(optimizer, data_loader, test_batch_size, model, options):
             loss = ContrastiveLoss().forward(op_1, op_2, match)
             val_loss += loss
     return (val_loss/counter)
-
+"""
 
 def main(parser):
     model = MODEL_DISPATCHER["siamese_vanilla"]
@@ -103,18 +108,25 @@ def main(parser):
         drop_last=True)
 
     optimizer = torch.optim.Adam(model.parameters(), lr = 1e-4)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="max", patience=5, factor = 0.3, verbose=True)
+    # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="max", patience=5, factor = 0.3, verbose=True)
 
     # if torch.cuda.device_count() > 1:
     #     model = nn.DataParallel(model)
 
+    best_loss = 999999
+
     for epoch in tqdm(range(parser.EPOCHS), total=101):
         score = train(optimizer, train_loader, parser.TRAIN_BATCH_SIZE, model, options)
         #score = evaluate(optimizer, test_loader, parser.TEST_BATCH_SIZE, model, options)
+        print("#" * 30)
         print("Current Loss",score)
-        scheduler.step(score)
-        if(epoch%5==0):
+        print("")
+        # scheduler.step(score)
+
+        # Save the current model if it has lower loss than the eralier best loss value
+        if(score < best_loss):
             torch.save(model.state_dict(), f"./model_{epoch}.bin")
+            best_loss = score
 
 
 if __name__ == "__main__":
