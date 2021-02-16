@@ -1,4 +1,7 @@
 # Siamese-Network
-This repository implements siamese network for one-shot similarity learning
+This repository implements siamese network for one-shot similarity learning.
+This is a generic model which can be applied to various type of one-shot learning problems like signature matching, face recognition and more.
 
-! [](https://www.researchgate.net/publication/328376369/figure/fig2/AS:683270429741059@1539915773531/Siamese-network-for-embedding-the-feature-maps-into-a-constant-vector.png)
+This is what the basic architecture of a Simaese Network look like :
+
+<img src="https://repository-images.githubusercontent.com/188448056/46875480-f43c-11e9-9e47-c83d3c399f3b" />
